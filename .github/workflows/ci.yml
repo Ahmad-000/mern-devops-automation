@@ -1,0 +1,47 @@
+name: MERN Application CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js for frontend
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: mern/client/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: mern/client
+        run: npm ci
+
+      - name: Build React frontend
+        working-directory: mern/client
+        run: npm run build
+
+      - name: Set up Node.js for backend
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: mern/server/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: mern/server
+        run: npm ci --omit=dev
+
+      - name: Validate Docker Compose configuration
+        run: docker compose config -q
+
+      - name: Build Docker images
+        run: docker compose build
