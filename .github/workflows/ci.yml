@@ -6,8 +6,11 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
-  build-and-validate:
+  build-and-publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -45,3 +48,34 @@ jobs:
 
       - name: Build Docker images
         run: docker compose build
+
+      - name: Set up Docker Buildx
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Publish frontend image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v6
+        with:
+          context: ./mern/client
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/mern-devops-frontend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/mern-devops-frontend:${{ github.sha }}
+
+      - name: Publish backend image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v6
+        with:
+          context: ./mern/server
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/mern-devops-backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/mern-devops-backend:${{ github.sha }}
