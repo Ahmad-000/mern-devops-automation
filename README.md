@@ -1,183 +1,210 @@
-# MERN Stack Example: Employee Records App (MongoDB Atlas, Express, React, Node.js)
+🚀 MERN DevOps Automation
 
-A full-stack CRUD application built with MongoDB, Express, React, and Node.js (MERN).
+A hands-on DevOps portfolio project by Muhammad Ahmad Raza
 
-Companion code for the [MERN Stack Tutorial](https://www.mongodb.com/languages/mern-stack-tutorial?utm_campaign=devrel&utm_medium=referral&utm_source=github&utm_content=mern.stack.example&utm_term=learning.fuel) and [video walkthrough](https://www.youtube.com/watch?v=4nKWREmCvsE).
+This project takes the original MERN Stack Employee Records application and extends it with containerization, cloud deployment, and DevOps automation.
 
-[![CI](https://github.com/mongodb-developer/mern-stack-example/actions/workflows/main.yaml/badge.svg)](https://github.com/mongodb-developer/mern-stack-example/actions/workflows/main.yaml)
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/mongodb-developer/mern-stack-example?style=social)](https://github.com/mongodb-developer/mern-stack-example/stargazers)
+The application was originally created by MongoDB Developer. My contribution focuses on the DevOps implementation and deployment workflow.
 
-## Project Overview
+🎯 Project Goals
 
-This project demonstrates an employee record tracker:
+Containerize the frontend and backend using Docker.
 
-- Create records
-- Read records from MongoDB Atlas
-- Update records
-- Delete records
+Run the application services using Docker Compose.
 
-The React app in `mern/client` calls an Express API in `mern/server`, and data is stored in MongoDB Atlas.
+Deploy the application to an AWS EC2 Linux instance.
 
-## MERN Stack Architecture
+Publish container images to Docker Hub.
 
-```
-┌─────────────────────┐       REST (JSON)      ┌──────────────────────────┐
-│   React (Vite)      │ ─────────────────────► │  Express API             │
-│   mern/client       │ ◄───────────────────── │  mern/server             │
-│   :5173             │                        │  :5050                   │
-└─────────────────────┘                        └───────────┬──────────────┘
-                                                           │ MongoDB Node.js driver
-                                                           ▼
-                                               ┌──────────────────────────┐
-                                               │  MongoDB Atlas           │
-                                               │  database: employees     │
-                                               │  collection: records     │
-                                               └──────────────────────────┘
-```
+Build a CI/CD workflow using GitHub Actions.
 
-Stack:
+Implement secure AWS authentication with IAM OIDC and deployment management through AWS Systems Manager (SSM).
 
-- Frontend: React 18, Vite, Tailwind CSS, React Router
-- Backend: Node.js, Express 4, MongoDB Node.js Driver 6
-- Database: MongoDB Atlas (`employees.records` collection)
+🛠️ Technology Stack
 
-## Project Structure
+Tool
 
-```text
-mern/
-   client/   # React + Vite frontend
-   server/   # Express API + MongoDB integration
-```
+Purpose
 
-## Prerequisites
+React, Vite
 
-- Node.js 20+
-- npm 9+
-- A free [MongoDB Atlas](https://www.mongodb.com/atlas?utm_campaign=devrel&utm_medium=referral&utm_source=github&utm_content=mern.stack.example&utm_term=learning.fuel) cluster
+Frontend application
 
-## Quick Start and MongoDB Setup
+Node.js, Express
 
-```bash
-# 1) Clone
-git clone https://github.com/mongodb-developer/mern-stack-example.git
-cd mern-stack-example
+Backend API
 
-# 2) Create server environment file
-cp mern/server/config.env.example mern/server/config.env
-```
+MongoDB
 
-Update `mern/server/config.env` with one of the following `ATLAS_URI` values:
+Application database
 
-Atlas cluster:
+Docker
 
-```env
-ATLAS_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/
-PORT=5050
-```
+Containerization
 
-If you are new to Atlas, use the [Atlas quick start guide](https://www.mongodb.com/docs/atlas/getting-started/?utm_campaign=devrel&utm_medium=referral&utm_source=github&utm_content=mern.stack.example&utm_term=learning.fuel) and then paste your connection string into `ATLAS_URI`.
+Docker Compose
 
-Optional: seed sample data:
+Multi-container management
 
-```bash
-cd mern/server && node seed.js
-```
+Nginx
 
-Start the backend API:
+Frontend web server
 
-```bash
-cd mern/server
-npm install
-npm start
-```
+Docker Hub
 
-Start the frontend in a second terminal:
+Container image registry
 
-```bash
-cd mern/client
-npm install
-npm run dev
-```
+AWS EC2
 
-Open `http://localhost:5173`.
+Application hosting
 
-## GitHub Codespaces and Dev Containers
+GitHub Actions
 
-GitHub Codespaces is an easy and fast way to get this project running without installing anything locally. It uses a dev container, which is a Docker environment configured for development.
+CI/CD automation
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/mongodb-developer/mern-stack-example?quickstart=1)
+AWS IAM OIDC
 
-## REST API Endpoints
+GitHub Actions authentication
 
-Base URL: `http://localhost:5050`
+AWS Systems Manager
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/record` | Retrieve all records |
-| `GET` | `/record/:id` | Retrieve one record by ID |
-| `POST` | `/record` | Create a record |
-| `PATCH` | `/record/:id` | Update a record |
-| `DELETE` | `/record/:id` | Delete a record |
+Remote instance management
 
-Example request body for create or update:
+🏗️ Architecture
 
-```json
-{
-   "name": "Jane Smith",
-   "position": "Developer",
-   "level": "Senior"
-}
-```
+                 GitHub Repository
+                        |
+                        v
+                 GitHub Actions
+                        |
+              Build and publish images
+                        |
+                        v
+                    Docker Hub
+                        |
+              AWS OIDC / AWS SSM
+                        |
+                        v
+                    AWS EC2
+                        |
+                   Docker Compose
+                        |
+              +---------+---------+
+              |                   |
+              v                   v
+        React + Nginx       Node.js + Express
+                                  |
+                                  v
+                               MongoDB
 
-## MongoDB Features Demonstrated
+The diagram represents the intended automated deployment flow. Update it as the complete CI/CD pipeline is verified.
 
-| Feature | Where |
-|---|---|
-| [MongoDB Node.js Driver](https://www.mongodb.com/docs/drivers/node/current/?utm_campaign=devrel&utm_medium=referral&utm_source=github&utm_content=mern.stack.example&utm_term=learning.fuel) | `mern/server/db/connection.js` |
-| [CRUD operations](https://www.mongodb.com/docs/manual/crud/?utm_campaign=devrel&utm_medium=referral&utm_source=github&utm_content=mern.stack.example&utm_term=learning.fuel) | `mern/server/routes/record.js` |
-| [MongoDB Atlas](https://www.mongodb.com/atlas?utm_campaign=devrel&utm_medium=referral&utm_source=github&utm_content=mern.stack.example&utm_term=learning.fuel) | `ATLAS_URI` in `config.env` |
-| [Server API version](https://www.mongodb.com/docs/manual/reference/stable-api/?utm_campaign=devrel&utm_medium=referral&utm_source=github&utm_content=mern.stack.example&utm_term=learning.fuel) | `ServerApiVersion.v1` in `connection.js` |
+🐳 Docker Images
 
-## Troubleshooting
+The project uses separate images for the frontend and backend.
 
-### Cannot connect to MongoDB Atlas
+Frontend: ahmad459/mern-devops-frontend
 
-- Verify `ATLAS_URI` in `mern/server/config.env`
-- Confirm your database user credentials are correct in `mern/server/config.env`
-- Confirm your IP is in [Atlas Network Access](https://www.mongodb.com/docs/atlas/security/ip-access-list/?utm_campaign=devrel&utm_medium=referral&utm_source=github&utm_content=mern.stack.example&utm_term=learning.fuel)
+Backend: ahmad459/mern-devops-backend
 
-### Backend fails to start
+☁️ AWS Deployment
 
-- Check Node version: `node --version`
-- Confirm `mern/server/config.env` exists
-- Reinstall dependencies in `mern/server`: `npm install`
+The application has been deployed to an AWS EC2 Linux instance using Docker Compose.
 
-### Frontend shows empty data
+The deployment work includes:
 
-- Confirm backend is running on `:5050`
-- Open browser dev tools and check network requests
-- Confirm records exist in Atlas (or run `node seed.js` in the server folder)
+Running the application in containers.
 
-### Port already in use
+Serving the frontend through Nginx.
 
-- Change `PORT` in `mern/server/config.env`, or stop the process using `:5050`
+Connecting the frontend to the backend API.
 
-## Community and Support
+Running MongoDB as a containerized service.
 
-- Use [GitHub Issues](https://github.com/mongodb-developer/mern-stack-example/issues) for bugs and feature requests
-- Use [MongoDB Community Forums](https://www.mongodb.com/community/forums/) for general MongoDB questions
+Configuring EC2 network access and security-group rules.
 
-## Additional Resources
+🔄 CI/CD Automation
 
-- [MERN Stack Tutorial](https://www.mongodb.com/languages/mern-stack-tutorial?utm_campaign=devrel&utm_medium=referral&utm_source=github&utm_content=mern.stack.example&utm_term=learning.fuel)
-- [MongoDB Atlas Docs](https://www.mongodb.com/docs/atlas?utm_campaign=devrel&utm_medium=referral&utm_source=github&utm_content=mern.stack.example&utm_term=learning.fuel)
-- [MongoDB Node.js Driver Docs](https://www.mongodb.com/docs/drivers/node/current/?utm_campaign=devrel&utm_medium=referral&utm_source=github&utm_content=mern.stack.example&utm_term=learning.fuel)
+The project is being developed toward an automated deployment workflow using GitHub Actions, Docker Hub, AWS IAM OIDC, and AWS Systems Manager.
 
-## License
+Planned workflow stages:
 
-[Apache 2.0](LICENSE)
+Trigger the workflow when changes are pushed to GitHub.
 
-## Disclaimer
+Build the frontend and backend images.
 
-This repository is for educational use and is not a supported MongoDB product.
+Push updated images to Docker Hub.
+
+Authenticate to AWS using OIDC.
+
+Trigger deployment commands through AWS Systems Manager.
+
+Verify the updated services on EC2.
+
+Status: Update this section when the end-to-end workflow has been successfully tested.
+
+▶️ Run Locally with Docker Compose
+
+Prerequisites
+
+Git
+
+Docker Desktop or Docker Engine
+
+Docker Compose
+
+1. Clone this repository
+
+git clone https://github.com/Ahmad-000/mern-devops-automation.git
+cd mern-devops-automation
+
+2. Start the application
+
+docker compose up -d --build
+
+3. Check the containers
+
+docker compose ps
+
+4. View logs
+
+docker compose logs -f
+
+5. Stop the application
+
+docker compose down
+
+Use the ports configured in docker-compose.yml to access the application.
+
+📂 Project Structure
+
+mern-devops-automation/
+├── mern/
+│   ├── client/          # React frontend
+│   └── server/          # Express API
+├── docker-compose.yml
+├── README.md
+└── .github/
+    └── workflows/      # GitHub Actions workflows, if configured
+
+📚 Original Application
+
+This project is based on the MERN Stack Example by MongoDB Developer.
+
+Original repository
+
+Original MERN tutorial
+
+Original video walkthrough
+
+The original application and its underlying code remain credited to their author. This repository documents my DevOps learning, infrastructure configuration, containerization, and deployment work.
+
+👨‍💻 Author
+
+Muhammad Ahmad Raza
+
+GitHub: Ahmad-000
+
+LinkedIn: Connect with me
+
+⭐ This repository is part of my hands-on DevOps learning and portfolio journey.
